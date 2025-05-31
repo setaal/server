@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器公告 - 秋岚服务器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍂</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2a, #1a2a40, #0d1525);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.05) 0%, transparent 15%),
+                radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.05) 0%, transparent 15%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(20, 25, 40, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: linear-gradient(90deg, #0d1525, #1a2a4a, #0d1525);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #4caf50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #4caf50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        .logo-icon::before {
+            content: "秋";
+            font-size: 30px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4caf50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        .nav-links a.active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        /* 头部区域 */
+        header {
+            background: linear-gradient(90deg, #0d1525, #1a2a4a, #0d1525);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+            opacity: 0.5;
+        }
+        
+        .server-icon {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #4caf50;
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.7);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+        
+        .server-icon::before {
+            content: "秋";
+            font-size: 80px;
+            font-weight: bold;
+            color: #4caf50;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+        }
+        
+        .server-icon::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: conic-gradient(
+                transparent, 
+                rgba(76, 175, 80, 0.3),
+                transparent
+            );
+            animation: rotate 6s linear infinite;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #4caf50;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a0aec0;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .minecraft-brand {
+            display: inline-block;
+            background: linear-gradient(135deg, #4caf50, #3498db);
+            color: #1a1f2d;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 40px;
+            line-height: 1.8;
+        }
+        
+        /* 公告区域 */
+        .announcements-section {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.2), rgba(211, 84, 0, 0.2));
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .announcement-title {
+            color: #e67e22;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(230, 126, 34, 0.4);
+        }
+        
+        .announcement-item {
+            background: rgba(30, 40, 60, 0.8);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #e67e22;
+            transition: transform 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .announcement-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .announcement-date {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .announcement-content {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+        }
+        
+        .announcement-content h3 {
+            color: #e67e22;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .module-tag {
+            display: inline-block;
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin: 0 5px;
+            border: 1px solid rgba(52, 152, 219, 0.5);
+        }
+        
+        .warning-tag {
+            display: inline-block;
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin: 0 5px;
+            border: 1px solid rgba(231, 76, 60, 0.5);
+        }
+        
+        .declaration-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px rgba(230, 126, 34, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        
+        .declaration-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(230, 126, 34, 0.7);
+        }
+        
+        .declaration-btn::after {
+            content: "→";
+            margin-left: 10px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #a0aec0;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(80, 150, 255, 0.2);
+            background: rgba(20, 25, 40, 0.9);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 优化加载性能 */
+        .server-icon::after {
+            animation: rotate 6s linear infinite;
+        }
+        
+        .announcement-item {
+            animation: fadeIn 0.6s ease forwards;
+            opacity: 0;
+        }
+        
+        .announcement-item:nth-child(1) { animation-delay: 0.2s; }
+        .announcement-item:nth-child(2) { animation-delay: 0.4s; }
+        .announcement-item:nth-child(3) { animation-delay: 0.6s; }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .server-icon {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .server-icon::before {
+                font-size: 60px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .navbar {
+                padding: 15px;
+            }
+            
+            .announcements-section {
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 30px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .announcement-item {
+                padding: 20px;
+            }
+            
+            .declaration-btn {
+                padding: 12px 25px;
+                font-size: 1rem;
+                display: block;
+                text-align: center;
+                margin: 20px auto 0;
+            }
+        }
+        
+        .notice-count {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        
+        .notice-count span {
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text">秋岚服务器</div>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active">服务器公告</a>
+            </div>
+        </nav>
+        
+        <!-- 头部区域 -->
+        <header>
+            <div class="header-overlay"></div>
+            <div class="server-icon"></div>
+            <h1>服务器公告</h1>
+            <p class="subtitle">及时了解秋岚服务器的最新动态和更新</p>
+            <div class="minecraft-brand">最新资讯 | 版本更新 | 重要通知</div>
+        </header>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <div class="notice-count">当前展示 <span>3</span> 条重要公告</div>
+            
+            <!-- 公告区域 -->
+            <div class="announcements-section">
+                <h2 class="announcement-title">最新公告</h2>
+                
+                <div class="announcement-item">
+                    <div class="announcement-date">
+                        <i class="fas fa-bullhorn"></i> 2025年5月30日
+                    </div>
+                    <div class="announcement-content">
+                        <h3>橡亚集团与秋岚服务器关系澄清</h3>
+                        <p>近期我们注意到社区中关于橡亚集团与秋岚服务器关系的讨论。为澄清事实，我们特此发布官方声明，明确双方关系仅限于赞助商与被赞助商关系。</p>
+                        <p>橡亚集团对秋岚服务器提供了5元人民币的赞助，此赞助行为不构成任何形式的股权关系或控制权。</p>
+                        <p>秋岚服务器是完全独立运作的Minecraft服务器，拥有自主的运营团队、技术架构和管理体系。</p>
+                    </div>
+                    <button class="declaration-btn" id="declarationBtn">查看完整声明</button>
+                </div>
+                
+                <div class="announcement-item">
+                    <div class="announcement-date">
+                        <i class="fas fa-robot"></i> 2025年6月15日
+                    </div>
+                    <div class="announcement-content">
+                        <h3>即将添加假人模组 <span class="module-tag">新功能</span></h3>
+                        <p>我们计划在本月底为服务器添加假人模组(Fake Player Mod)，这将为服务器带来更多趣味性和便利性。</p>
+                        <p>假人模组允许玩家创建虚拟助手，执行自动化任务：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 15px;">
+                            <li>自动化农场收割与种植</li>
+                            <li>自动钓鱼和物品收集</li>
+                            <li>红石装置测试助手</li>
+                            <li>服务器活动NPC角色</li>
+                        </ul>
+                        <p>该模组将完全兼容现有游戏机制，不会影响游戏平衡性。</p>
+                    </div>
+                </div>
+                
+                <div class="announcement-item">
+                    <div class="announcement-date">
+                        <i class="fas fa-user-circle"></i> 2025年7月计划
+                    </div>
+                    <div class="announcement-content">
+                        <h3>七月添加皮肤模组 <span class="warning-tag">重要通知</span></h3>
+                        <p>我们计划在2025年7月为服务器添加皮肤模组(Skins Restorer)，这将允许玩家显示自定义皮肤。</p>
+                        <p>请注意：由于技术限制，此模组将导致<span style="color: #e74c3c; font-weight: bold;">ARM架构设备无法进入服务器</span>。</p>
+                        <p>受影响的设备包括：</p>
+                        <ul style="margin-left: 20px; margin-top: 10px; margin-bottom: 15px;">
+                            <li>树莓派(Raspberry Pi)</li>
+                            <li>部分Android设备</li>
+                            <li>M1/M2 Mac设备</li>
+                            <li>其他ARM架构处理器设备</li>
+                        </ul>
+                        <p>我们建议使用x86架构设备的玩家继续享受服务器体验。对ARM设备玩家造成的不便，我们深表歉意。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer>
+            <p>© 2025 秋岚服务器 版权所有 | Minecraft Java版Fabric 1.21生存服务器</p>
+            <p>公告页面版本: 1.0.0 | 最后更新: 2025年5月31日</p>
+        </footer>
+    </div>
+
+    <script>
+        // 优化后的脚本 - 轻量高效
+        document.addEventListener('DOMContentLoaded', function() {
+            // 声明按钮事件 - 直接跳转到指定文件
+            document.getElementById('declarationBtn').addEventListener('click', function() {
+                window.location.href = 'gonggao/Declaration_of_Independence.html';
+            });
+            
+            // 添加公告悬停效果
+            const items = document.querySelectorAll('.announcement-item');
+            items.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.4)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

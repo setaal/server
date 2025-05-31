@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>秋岚服务器 - Minecraft 1.21 Fabric生存服务器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍂</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c1a2a, #1a2a40, #0d1525);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 0;
+            position: relative;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(76, 175, 80, 0.05) 0%, transparent 15%),
+                radial-gradient(circle at 90% 80%, rgba(52, 152, 219, 0.05) 0%, transparent 15%);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: rgba(20, 25, 40, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 导航栏 */
+        .navbar {
+            background: linear-gradient(90deg, #0d1525, #1a2a4a, #0d1525);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #4caf50;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #4caf50;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        .logo-icon::before {
+            content: "秋";
+            font-size: 30px;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        .logo-text {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4caf50;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.6);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            font-size: 1.1rem;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4caf50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+        
+        .nav-links a.active {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        /* 头部区域 */
+        header {
+            background: linear-gradient(90deg, #0d1525, #1a2a4a, #0d1525);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                linear-gradient(45deg, rgba(76, 175, 80, 0.1) 0%, transparent 50%),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="rgba(76,175,80,0.1)" stroke-width="1" stroke-dasharray="5,5"/></svg>');
+            opacity: 0.5;
+        }
+        
+        .server-icon {
+            width: 140px;
+            height: 140px;
+            background: linear-gradient(135deg, #2c3e50, #4a235a);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid #4caf50;
+            box-shadow: 0 0 30px rgba(76, 175, 80, 0.7);
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+        
+        .server-icon::before {
+            content: "秋";
+            font-size: 80px;
+            font-weight: bold;
+            color: #4caf50;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+        }
+        
+        .server-icon::after {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: conic-gradient(
+                transparent, 
+                rgba(76, 175, 80, 0.3),
+                transparent
+            );
+            animation: rotate 6s linear infinite;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #4caf50;
+            text-shadow: 0 0 15px rgba(76, 175, 80, 0.6);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .subtitle {
+            font-size: 1.4rem;
+            color: #a0aec0;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .minecraft-brand {
+            display: inline-block;
+            background: linear-gradient(135deg, #4caf50, #3498db);
+            color: #1a1f2d;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+        }
+        
+        /* 内容区域 */
+        .content {
+            padding: 40px;
+            line-height: 1.8;
+        }
+        
+        .section {
+            background: rgba(30, 40, 60, 0.7);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4caf50;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .section h2 {
+            color: #4caf50;
+            margin-bottom: 25px;
+            font-size: 1.9rem;
+            text-align: center;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .section h2::after {
+            content: "";
+            display: block;
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #4caf50, transparent);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+        
+        .section p {
+            margin-bottom: 20px;
+            font-size: 1.15rem;
+            text-align: justify;
+            padding: 0 10px;
+        }
+        
+        .highlight {
+            color: #4caf50;
+            font-weight: bold;
+            background: rgba(76, 175, 80, 0.15);
+            padding: 5px 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        /* 整合包区域 */
+        .modpack-box {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(52, 152, 219, 0.2));
+            border: 2px solid #4caf50;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modpack-box::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><rect width="20" height="20" fill="none" stroke="rgba(76,175,80,0.3)" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .modpack-title {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #4caf50, #3498db);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(76, 175, 80, 0.7);
+        }
+        
+        .download-btn::after {
+            content: "→";
+            margin-left: 10px;
+        }
+        
+        /* 公告按钮区域 */
+        .announcements-btn-section {
+            background: linear-gradient(135deg, rgba(230, 126, 34, 0.2), rgba(211, 84, 0, 0.2));
+            border: 2px solid #e67e22;
+            border-radius: 12px;
+            padding: 40px 30px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .announcements-btn-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><rect width="20" height="20" fill="none" stroke="rgba(230,126,34,0.3)" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .announcement-btn-title {
+            color: #e67e22;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px rgba(230, 126, 34, 0.4);
+        }
+        
+        .announcement-btn-desc {
+            font-size: 1.15rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .announcement-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 15px 50px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 0 20px rgba(230, 126, 34, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .announcement-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.7);
+        }
+        
+        .announcement-btn::after {
+            content: "→";
+            margin-left: 10px;
+        }
+        
+        /* 赞助商区域 */
+        .sponsors-section {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(52, 73, 94, 0.2));
+            border: 2px solid #9b59b6;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sponsors-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="20" height="20"><rect width="20" height="20" fill="none" stroke="rgba(155,89,182,0.3)" stroke-width="1"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .sponsor-title {
+            color: #9b59b6;
+            font-weight: bold;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+        }
+        
+        .sponsor-card {
+            background: rgba(30, 40, 60, 0.7);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+            border: 1px solid rgba(155, 89, 182, 0.4);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .sponsor-card:hover {
+            transform: translateY(-5px);
+            border-color: #9b59b6;
+        }
+        
+        .sponsor-logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #8e44ad, #3498db);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #9b59b6;
+            box-shadow: 0 0 20px rgba(155, 89, 182, 0.5);
+            font-size: 50px;
+            color: white;
+        }
+        
+        .sponsor-name {
+            font-size: 1.8rem;
+            color: #9b59b6;
+            margin-bottom: 15px;
+        }
+        
+        .sponsor-amount {
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin-bottom: 15px;
+        }
+        
+        .sponsor-note {
+            color: #bdc3c7;
+            font-style: italic;
+            margin-top: 15px;
+        }
+        
+        /* 服务器信息 */
+        .server-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 25px;
+            gap: 20px;
+        }
+        
+        .info-card {
+            background: rgba(30, 40, 60, 0.7);
+            padding: 25px;
+            border-radius: 12px;
+            flex: 1;
+            min-width: 280px;
+            border: 1px solid rgba(80, 150, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(76, 175, 80, 0.6);
+        }
+        
+        .info-card h3 {
+            color: #4caf50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .info-card .icon {
+            width: 40px;
+            height: 40px;
+            background: #4caf50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        
+        .info-content {
+            font-size: 1.15rem;
+            margin-left: 52px;
+        }
+        
+        .server-address {
+            font-family: 'Courier New', monospace;
+            background: rgba(0,0,0,0.3);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin: 15px 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.3rem;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        .rules-list {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .rules-list li {
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .rules-list li::before {
+            content: "▹";
+            color: #4caf50;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+        
+        .qq-group {
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .qq-number {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #4caf50;
+            margin-top: 15px;
+            display: inline-block;
+            background: rgba(76, 175, 80, 0.1);
+            padding: 10px 25px;
+            border-radius: 30px;
+        }
+        
+        .legal-note {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            background: rgba(30, 40, 60, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        
+        .legal-note h3 {
+            color: #4caf50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .legal-note p {
+            font-size: 0.95rem;
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #a0aec0;
+            font-size: 0.95rem;
+            border-top: 1px solid rgba(80, 150, 255, 0.2);
+            background: rgba(20, 25, 40, 0.9);
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .server-info {
+                flex-direction: column;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .server-icon {
+                width: 110px;
+                height: 110px;
+            }
+            
+            .server-icon::before {
+                font-size: 60px;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .navbar {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+            
+            header {
+                padding: 30px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .modpack-box {
+                padding: 20px;
+            }
+            
+            .server-address {
+                font-size: 1.1rem;
+                padding: 10px 15px;
+            }
+            
+            .info-content {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+            
+            .download-btn, .announcement-btn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text">秋岚服务器</div>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="active">首页</a>
+                <a href="#about">关于我们</a>
+                <a href="#sponsors">赞助商</a>
+                <a href="#modpack">整合包下载</a>
+                <a href="#announcements">服务器公告</a>
+                <a href="#rules">服务器规则</a>
+                <a href="#join">加入我们</a>
+            </div>
+        </nav>
+        
+        <!-- 头部区域 -->
+        <header id="home">
+            <div class="header-overlay"></div>
+            <div class="server-icon"></div>
+            <h1>秋岚服务器</h1>
+            <p class="subtitle">Minecraft Java版Fabric生存服务器</p>
+            <div class="minecraft-brand">JAVA EDITION | FABRIC 1.21 | 生存模式</div>
+        </header>
+        
+        <!-- 主要内容 -->
+        <div class="content">
+            <!-- 关于服务器 -->
+            <div id="about" class="section">
+                <h2>关于秋岚服务器</h2>
+                
+                <p>秋岚服务器是一个基于Minecraft Java版1.21的Fabric生存服务器，由一群热爱Minecraft的玩家共同创建和维护。我们致力于提供一个友好、和谐的游戏环境，让玩家能够尽情享受Minecraft的乐趣。</p>
+                
+                <p>服务器采用高性能硬件，保证24/7稳定运行，同时配备了优化的Fabric模组，提供流畅的游戏体验。</p>
+                
+                <p>秋岚服务器提供纯净的生存体验，同时加入了一些优化和便利性模组，确保玩家在探索、建设和社交中都能获得最佳体验。</p>
+                
+                <p>我们的服务器拥有活跃的玩家社区，定期举办各种活动，欢迎所有热爱Minecraft的玩家加入我们！</p>
+            </div>
+            
+            <!-- 赞助商区域 -->
+            <div id="sponsors" class="sponsors-section">
+                <h2 class="sponsor-title">我们的赞助商</h2>
+                <p class="sponsor-note">感谢以下组织对秋岚服务器的支持</p>
+                
+                <div class="sponsor-card">
+                    <div class="sponsor-logo">橡</div>
+                    <div class="sponsor-name">橡亚集团</div>
+                    <div class="sponsor-amount">赞助金额: 5元人民币</div>
+                    <p>感谢橡亚集团对秋岚服务器的慷慨支持！您的赞助帮助我们提供更好的游戏体验。</p>
+                </div>
+                
+                <p class="sponsor-note">赞助商支持帮助我们持续改进服务器设施和社区建设</p>
+            </div>
+            
+            <!-- 整合包下载 -->
+            <div id="modpack" class="modpack-box">
+                <div class="modpack-title">秋岚整合包下载</div>
+                <p style="margin-top: 15px; font-size: 1.2rem;">所有玩家必须安装此整合包才能进入服务器</p>
+                <p style="font-size: 1.1rem;">整合包包含必要的客户端模组和配置，针对Minecraft 1.21优化</p>
+                
+                <button class="download-btn" id="downloadBtn">访问整合包页面</button>
+            </div>
+            
+            <!-- 服务器公告按钮 -->
+            <div id="announcements" class="announcements-btn-section">
+                <h2 class="announcement-btn-title">服务器公告</h2>
+                <p class="announcement-btn-desc">查看最新的服务器公告、更新计划、活动通知和重要声明。了解服务器的最新动态和未来发展计划。</p>
+                
+                <button class="announcement-btn" id="announcementBtn">查看所有公告</button>
+            </div>
+            
+            <!-- 服务器规则 -->
+            <div id="rules" class="section">
+                <h2>服务器规则</h2>
+                
+                <p>为了维护良好的游戏环境，请所有玩家遵守以下规则：</p>
+                
+                <ul class="rules-list">
+                    <li>尊重他人，禁止任何形式的侮辱、歧视或人身攻击</li>
+                    <li>禁止随意攻击其他玩家（PVP需双方同意）</li>
+                    <li>禁止偷窃其他玩家的物品、破坏他人建筑</li>
+                    <li>禁止使用任何作弊客户端、外挂或利用游戏漏洞</li>
+                    <li>禁止在公共区域乱扔垃圾或建造不雅建筑</li>
+                    <li>禁止恶意破坏服务器设施或公共建筑</li>
+                    <li>禁止刷屏、发布广告或无关内容</li>
+                </ul>
+                
+                <p>违反规则者将根据情节轻重受到警告、禁言、封禁等处罚。管理团队保留对规则的最终解释权。</p>
+            </div>
+            
+            <!-- 服务器信息 -->
+            <div class="server-info">
+                <div class="info-card">
+                    <h3><span class="icon">⏱️</span> 服务器信息</h3>
+                    <div class="info-content">
+                        <p><strong>开始运营：</strong>2025年5月</p>
+                        <p><strong>游戏版本：</strong>Java 1.21</p>
+                        <p><strong>核心类型：</strong>Fabric</p>
+                        <p><strong>游戏模式：</strong>生存模式</p>
+                        <p><strong>运行模式：</strong>24/7 全天候</p>
+                    </div>
+                </div>
+                
+                <div class="info-card">
+                    <h3><span class="icon">🔌</span> 连接信息</h3>
+                    <div class="info-content">
+                        <p>使用Minecraft Java版1.21连接服务器：</p>
+                        <p><strong>主连接地址：</strong></p>
+                        <div class="server-address">qionglan.9666.fun:18010</div>
+                        <p><strong>备用连接地址：</strong></p>
+                        <div class="server-address">play.simpfun.cn:18010</div>
+                        <p><strong>状态：</strong> <span style="color:#4caf50;">●</span> 已上线</p>
+                        <p><strong>必备：</strong>秋岚整合包</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加入QQ群 -->
+            <div id="join" class="section">
+                <h2>加入我们的QQ群</h2>
+                
+                <p>欢迎加入我们的QQ群，与服务器玩家交流、获取最新信息、报告问题：</p>
+                
+                <div class="qq-group">
+                    <div class="qq-number">群号: 460633252</div>
+                    <p style="margin-top: 20px;">搜索群号加入我们的社区，获取最新服务器资讯</p>
+                </div>
+            </div>
+            
+            <!-- 法律声明 -->
+            <div class="legal-note">
+                <h3>法律声明</h3>
+                <p>Minecraft是Mojang Studios的商标，秋岚服务器与Mojang Studios没有从属关系。</p>
+                <p>本网站所有内容归秋岚服务器所有，未经许可不得转载。</p>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer>
+            <p>© 2025 秋岚服务器 版权所有 | Minecraft Java版Fabric 1.21生存服务器</p>
+        </footer>
+    </div>
+
+    <script>
+        // 跳转到整合包页面
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            window.location.href = 'qionglanzhb.html';
+        });
+
+        // 跳转到公告页面
+        document.getElementById('announcementBtn').addEventListener('click', function() {
+            window.location.href = 'gonggao.html';
+        });
+
+        // 简单的动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.info-card, .section, .modpack-box, .sponsors-section, .announcements-btn-section');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, 200 * index);
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    
+                    // 更新活动链接
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
